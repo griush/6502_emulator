@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "cpu",
+    "memory",
+    "app"
+]
