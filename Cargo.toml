@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "cpu",
     "memory",
+    "mos6510",
     "app"
 ]

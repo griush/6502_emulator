@@ -6,6 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cpu = { path="../cpu" }
+mos6510 = { path="../mos6510" }
 memory = { path="../memory" }
 minifb = "0.25"
