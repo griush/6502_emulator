@@ -1,5 +1,6 @@
 # C64 Emulator
 ![C64 README Banner](./res/C64_Emulator_banner.png)
+
 ![GitHub repo size](https://img.shields.io/github/repo-size/griush/c64_emulator)
 ![GitHub Repo stars](https://img.shields.io/github/stars/griush/c64_emulator?color=green)
 ![GitHub License](https://img.shields.io/github/license/griush/c64_emulator?style=flat&color=green)
