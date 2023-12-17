@@ -63,7 +63,7 @@ impl Mos6510 {
 
         // however, we're not executing any code, so we'll just set it to 0xff
         // it will be set automatically when we load the c64 kernal rom
-        self.sp = 0x00; // The temp code in main.rs sets this to 0xff
+        self.sp = 0x00; 
 
         self.ps = 0x00;
         self.pc = self.mem.borrow().get_reset_vector();
@@ -1164,13 +1164,12 @@ impl Mos6510 {
     #[cfg(debug_assertions)]
     pub fn print_state(&self) {
         println!("== Registers:");
-        println!("  A: {:#04x}", self.a);
-        println!("  X: {:#04x}", self.x);
-        println!("  Y: {:#04x}", self.y);
+        println!("  A:  {:#04x}", self.a);
+        println!("  X:  {:#04x}", self.x);
+        println!("  Y:  {:#04x}", self.y);
         println!("  SP: {:#04x}", self.sp);
         println!("  PS: {:#04x}", self.ps);
-        println!("  PC: {:#06x}", self.pc);
-        println!("");
+        println!("  PC: {:#06x}\n", self.pc);
     }
 }
 

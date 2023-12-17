@@ -1,4 +1,4 @@
-/// Interrupt codes from the 6510 instruction set
+/// Instruction codes from the 6510 instruction set
 pub enum OpCode {
     // Misc
     Nop = 0xEA,

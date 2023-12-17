@@ -40,4 +40,11 @@ impl Memory {
 
         (high_byte as u16) << 8 | (low_byte as u16)
     }
+
+    pub fn load_rom(&mut self, path: String) {
+        let rom: Vec<u8> = std::fs::read(path).unwrap();
+        for (i, byte) in rom.iter().enumerate() {
+            self.write(i as u16, *byte);
+        }
+    }
 }
