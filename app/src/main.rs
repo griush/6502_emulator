@@ -59,11 +59,14 @@ fn main() {
 
     // Load ROMs
     let args: Vec<String> = std::env::args().collect();
-    if args.len() < 2 {
-        panic!("No ROM file specified!");
+    if args.len() == 2 {
+        let rom_file_path: String = args[1].clone();
+        mem.borrow_mut().load_rom(rom_file_path.as_str(), 0x0000);
+    } else {
+        // Load C64 ROMs
+        // kernal rom
+        mem.borrow_mut().load_rom("roms/C64_KERNALS/dolphindos.bin", 0xe000);
     }
-    let rom_file_path: String = args[1].clone();
-    mem.borrow_mut().load_rom(rom_file_path);
 
     // Initialize CPU
     let mut cpu: Mos6510 = Mos6510::new(mem);
