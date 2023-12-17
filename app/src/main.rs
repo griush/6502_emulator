@@ -65,7 +65,11 @@ fn main() {
     } else {
         // Load C64 ROMs
         // kernal rom
-        mem.borrow_mut().load_rom("roms/C64_KERNALS/dolphindos.bin", 0xe000);
+        mem.borrow_mut().load_rom("roms/kernal.901227-02.bin", 0xe000);
+        // basic rom
+        mem.borrow_mut().load_rom("roms/basic.901226-01.bin", 0xa000);
+        // character rom
+        mem.borrow_mut().load_rom("roms/characters.325056-03.bin", 0xd000);
     }
 
     // Initialize CPU
@@ -108,7 +112,7 @@ fn main() {
         }
 
         for i in buffer.iter_mut() {
-            *i = 0x007c71da; // write something more funny here!
+            *i = 0x00887ECB; // write something more funny here!
         }
 
         // We unwrap here as we want this code to exit if it fails. Real applications may want to handle this in a different way

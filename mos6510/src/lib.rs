@@ -63,7 +63,7 @@ impl Mos6510 {
 
         // however, we're not executing any code, so we'll just set it to 0xff
         // it will be set automatically when we load the c64 kernal rom
-        self.sp = 0x00; 
+        self.sp = 0x00;
 
         self.ps = 0x00;
         self.pc = self.mem.borrow().get_reset_vector();
@@ -71,8 +71,7 @@ impl Mos6510 {
 
     /// Halts/resumes the CPU.
     /// If the CPU is halted, it will not execute any instructions.
-    /// If cpu.halted is true, then it will be set to false.
-    /// If cpu.halted is false, then it will be set to true.
+    /// halted => !halted
     pub fn halt_resume(&mut self) {
         self.halted = !self.halted;
     }
@@ -82,12 +81,16 @@ impl Mos6510 {
             let op_code: u8 = self.fetch();
             #[cfg(debug_assertions)]
             {
-                println!("== Executing {:#04x} ==", op_code as u8);
+                println!(
+                    "== Executing {:#04x} at {:#06x} ==",
+                    op_code as u8,
+                    self.pc - 1
+                );
             }
             self.execute(op_code.into());
             #[cfg(debug_assertions)]
             {
-                println!("== Done ==");
+                println!("== Done ==\n");
             }
         }
     }
@@ -457,49 +460,105 @@ impl Mos6510 {
             OpCode::Bcc => {
                 let offset: u8 = self.fetch();
                 if self.get_flag(CARRY_FLAG) == 0 {
-                    self.pc = self.pc.wrapping_add(offset as u16);
+                    let offset = if offset & 0x80 != 0 {
+                        // If the offset is negative, extend the sign bit to 16 bits
+                        (offset as u16) | 0xff00
+                    } else {
+                        // If the offset is positive, just cast it to u16
+                        offset as u16
+                    };
+                    self.pc = self.pc.wrapping_add(offset);
                 }
             }
             OpCode::Bcs => {
                 let offset: u8 = self.fetch();
-                if self.get_flag(CARRY_FLAG) > 0 {
-                    self.pc = self.pc.wrapping_add(offset as u16);
+                if self.get_flag(CARRY_FLAG) != 0 {
+                    let offset = if offset & 0x80 != 0 {
+                        // If the offset is negative, extend the sign bit to 16 bits
+                        (offset as u16) | 0xff00
+                    } else {
+                        // If the offset is positive, just cast it to u16
+                        offset as u16
+                    };
+                    self.pc = self.pc.wrapping_add(offset);
                 }
             }
             OpCode::Beq => {
                 let offset: u8 = self.fetch();
-                if self.get_flag(ZERO_FLAG) > 0 {
-                    self.pc = self.pc.wrapping_add(offset as u16);
+                if self.get_flag(ZERO_FLAG) != 0 {
+                    let offset = if offset & 0x80 != 0 {
+                        // If the offset is negative, extend the sign bit to 16 bits
+                        (offset as u16) | 0xff00
+                    } else {
+                        // If the offset is positive, just cast it to u16
+                        offset as u16
+                    };
+                    self.pc = self.pc.wrapping_add(offset);
                 }
             }
             OpCode::Bmi => {
                 let offset: u8 = self.fetch();
-                if self.get_flag(NEGATIVE_FLAG) > 0 {
-                    self.pc = self.pc.wrapping_add(offset as u16);
+                if self.get_flag(NEGATIVE_FLAG) != 0 {
+                    let offset = if offset & 0x80 != 0 {
+                        // If the offset is negative, extend the sign bit to 16 bits
+                        (offset as u16) | 0xff00
+                    } else {
+                        // If the offset is positive, just cast it to u16
+                        offset as u16
+                    };
+                    self.pc = self.pc.wrapping_add(offset);
                 }
             }
             OpCode::Bne => {
                 let offset: u8 = self.fetch();
-                if !self.get_flag(ZERO_FLAG) > 0 {
-                    self.pc = self.pc.wrapping_add(offset as u16);
+                if self.get_flag(ZERO_FLAG) == 0 {
+                    let offset = if offset & 0x80 != 0 {
+                        // If the offset is negative, extend the sign bit to 16 bits
+                        (offset as u16) | 0xff00
+                    } else {
+                        // If the offset is positive, just cast it to u16
+                        offset as u16
+                    };
+                    self.pc = self.pc.wrapping_add(offset);
                 }
             }
             OpCode::Bpl => {
                 let offset: u8 = self.fetch();
-                if !self.get_flag(NEGATIVE_FLAG) > 0 {
-                    self.pc = self.pc.wrapping_add(offset as u16);
+                if self.get_flag(NEGATIVE_FLAG) == 0 {
+                    let offset = if offset & 0x80 != 0 {
+                        // If the offset is negative, extend the sign bit to 16 bits
+                        (offset as u16) | 0xff00
+                    } else {
+                        // If the offset is positive, just cast it to u16
+                        offset as u16
+                    };
+                    self.pc = self.pc.wrapping_add(offset);
                 }
             }
             OpCode::Bvc => {
                 let offset: u8 = self.fetch();
-                if !self.get_flag(OVERFLOW_FLAG) > 0 {
-                    self.pc = self.pc.wrapping_add(offset as u16);
+                if self.get_flag(OVERFLOW_FLAG) == 0 {
+                    let offset = if offset & 0x80 != 0 {
+                        // If the offset is negative, extend the sign bit to 16 bits
+                        (offset as u16) | 0xff00
+                    } else {
+                        // If the offset is positive, just cast it to u16
+                        offset as u16
+                    };
+                    self.pc = self.pc.wrapping_add(offset);
                 }
             }
             OpCode::Bvs => {
                 let offset: u8 = self.fetch();
-                if self.get_flag(OVERFLOW_FLAG) > 0 {
-                    self.pc = self.pc.wrapping_add(offset as u16);
+                if self.get_flag(OVERFLOW_FLAG) != 0 {
+                    let offset = if offset & 0x80 != 0 {
+                        // If the offset is negative, extend the sign bit to 16 bits
+                        (offset as u16) | 0xff00
+                    } else {
+                        // If the offset is positive, just cast it to u16
+                        offset as u16
+                    };
+                    self.pc = self.pc.wrapping_add(offset);
                 }
             }
             OpCode::AdcI => {
@@ -1036,6 +1095,9 @@ impl Mos6510 {
         }
     }
 
+    /// # Returns
+    /// The instruction located at the current address stored in the PC register.
+    /// PC is incremented by 1.
     fn fetch(&mut self) -> u8 {
         let value: u8 = self.mem.borrow().read(self.pc);
         self.pc += 0x01;
@@ -1044,7 +1106,7 @@ impl Mos6510 {
 
     fn fetch_word(&mut self) -> u16 {
         let low_byte: u8 = self.mem.borrow().read(self.pc);
-        let high_byte: u8 = self.mem.borrow().read(self.pc + 0x01);
+        let high_byte: u8 = self.mem.borrow().read(self.pc.wrapping_add(0x01));
         let address: u16 = (high_byte as u16) << 8 | (low_byte as u16);
         self.pc += 0x02;
         address
@@ -1169,7 +1231,13 @@ impl Mos6510 {
         println!("  Y:  {:#04x}", self.y);
         println!("  SP: {:#04x}", self.sp);
         println!("  PS: {:#04x}", self.ps);
-        println!("  PC: {:#06x}\n", self.pc);
+        println!("  PC: {:#06x}", self.pc);
+        println!("== Memory:");
+        println!(
+            "  {:#06x}: {:#04x}\n",
+            0x0000,
+            self.mem.borrow().read(0x0000)
+        );
     }
 }
 
@@ -1246,6 +1314,31 @@ mod tests_6510 {
         cpu.step();
 
         assert_eq!(cpu.pc, 0x0003);
+        assert_eq!(cpu.ps, ZERO_FLAG);
+    }
+
+    #[test]
+    fn execute_beq_negative_offset() {
+        let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
+        let mut cpu: Mos6510 = Mos6510::new(mem);
+        cpu.reset();
+
+        cpu.ps = ZERO_FLAG;
+        cpu.pc = 0x0000;
+
+        cpu.mem.borrow_mut().write(0x0000, OpCode::Nop.into());
+        cpu.mem.borrow_mut().write(0x0001, OpCode::Nop.into());
+        cpu.mem.borrow_mut().write(0x0002, OpCode::LdaI.into());
+        cpu.mem.borrow_mut().write(0x0003, 0x00);
+        cpu.mem.borrow_mut().write(0x0004, OpCode::Beq.into());
+        cpu.mem.borrow_mut().write(0x0005, 0xFC);
+
+        cpu.step();
+        cpu.step();
+        cpu.step();
+        cpu.step();
+
+        assert_eq!(cpu.pc, 0x0002);
         assert_eq!(cpu.ps, ZERO_FLAG);
     }
 
