@@ -82,8 +82,9 @@ impl Mos6510 {
             #[cfg(debug_assertions)]
             {
                 println!(
-                    "== Executing {:#04x} at {:#06x} ==",
-                    op_code as u8,
+                    "== Executing {}({:#04x}) at {:#06x} ==",
+                    OpCode::from(op_code),
+                    op_code,
                     self.pc - 1
                 );
             }
