@@ -15,7 +15,7 @@ const NEGATIVE_FLAG: u8 = 0b1000_0000;
 
 /// A MOS 6502 CPU.
 /// Decimal mode is not yet supported.
-pub struct Mos6510 {
+pub struct Mos6502 {
     a: u8,
     x: u8,
     y: u8,
@@ -29,7 +29,7 @@ pub struct Mos6510 {
     mem: Rc<RefCell<Memory>>,
 }
 
-impl Mos6510 {
+impl Mos6502 {
     /// Creates a new `Cpu` instance.
     /// However, this method does not initialize the CPU to its initial state.
     /// To do that, call `reset()` after creating a new `Cpu` instance.
@@ -43,7 +43,7 @@ impl Mos6510 {
     ///
     /// A new `Cpu` instance.
     pub fn new(mem: Rc<RefCell<Memory>>) -> Self {
-        Mos6510 {
+        Mos6502 {
             a: 0x00,
             x: 0x00,
             y: 0x00,
@@ -1251,7 +1251,7 @@ mod tests_6510 {
     #[test]
     fn execute_dex() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.x = 0x01;
@@ -1265,7 +1265,7 @@ mod tests_6510 {
     #[test]
     fn execute_dey() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.y = 0x01;
@@ -1279,7 +1279,7 @@ mod tests_6510 {
     #[test]
     fn execute_bcc() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.pc = 0x0000;
@@ -1304,7 +1304,7 @@ mod tests_6510 {
     #[test]
     fn execute_beq() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.ps = ZERO_FLAG;
@@ -1321,7 +1321,7 @@ mod tests_6510 {
     #[test]
     fn execute_beq_negative_offset() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.ps = ZERO_FLAG;
@@ -1346,7 +1346,7 @@ mod tests_6510 {
     #[test]
     fn execute_bmi() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.pc = 0x0000;
@@ -1371,7 +1371,7 @@ mod tests_6510 {
     #[test]
     fn execute_ldai() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.mem.borrow_mut().write(0x0000, OpCode::LdaI.into());
@@ -1386,7 +1386,7 @@ mod tests_6510 {
     #[test]
     fn execute_ldxi() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.mem.borrow_mut().write(0x0000, OpCode::LdxI.into());
@@ -1401,7 +1401,7 @@ mod tests_6510 {
     #[test]
     fn execute_ldyi() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu: Mos6510 = Mos6510::new(mem);
+        let mut cpu: Mos6502 = Mos6502::new(mem);
         cpu.reset();
 
         cpu.mem.borrow_mut().write(0x0000, OpCode::LdyI.into());
@@ -1415,7 +1415,7 @@ mod tests_6510 {
     #[test]
     fn execute_rola() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu = Mos6510::new(mem);
+        let mut cpu = Mos6502::new(mem);
         cpu.reset();
 
         cpu.a = 0;
@@ -1432,7 +1432,7 @@ mod tests_6510 {
     #[test]
     fn execute_rolzp() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu = Mos6510::new(mem);
+        let mut cpu = Mos6502::new(mem);
         cpu.reset();
 
         cpu.ps = CARRY_FLAG | ZERO_FLAG | NEGATIVE_FLAG;
@@ -1451,7 +1451,7 @@ mod tests_6510 {
     #[test]
     fn execute_rolzp2() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu = Mos6510::new(mem);
+        let mut cpu = Mos6502::new(mem);
         cpu.reset();
 
         cpu.ps = NEGATIVE_FLAG;
@@ -1470,7 +1470,7 @@ mod tests_6510 {
     #[test]
     fn execute_adc() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu = Mos6510::new(mem);
+        let mut cpu = Mos6502::new(mem);
         cpu.reset();
 
         cpu.a = 0x01;
@@ -1488,7 +1488,7 @@ mod tests_6510 {
     #[test]
     fn execute_adc_overflow() {
         let mem: Rc<RefCell<Memory>> = Rc::new(RefCell::new(Memory::new()));
-        let mut cpu = Mos6510::new(mem);
+        let mut cpu = Mos6502::new(mem);
         cpu.reset();
 
         cpu.a = 0x7F;

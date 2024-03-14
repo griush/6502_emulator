@@ -1,7 +1,9 @@
 [workspace]
 
+resolver = "2"
+
 members = [
     "memory",
-    "mos6510",
+    "mos6502",
     "app"
 ]

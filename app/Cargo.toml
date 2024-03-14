@@ -2,12 +2,9 @@
 name = "app"
 version = "0.1.0"
 edition = "2021"
-description = "A simple Commodore 64 emulator"
-author = "Gerard Rius"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-mos6510 = { path="../mos6510" }
+mos6502 = { path="../mos6502" }
 memory = { path="../memory" }
-minifb = "0.25"
